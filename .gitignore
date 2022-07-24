@@ -9,6 +9,7 @@
 /public/storage
 /storage/*.key
 /vendor
+_ide_helper*.php
 auth.json
 Homestead.json
 Homestead.yaml

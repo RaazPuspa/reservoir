@@ -1,12 +1,14 @@
 <template>
-    <div class="px-2 py-1 w-full">
+    <div class="px-4 py-1 w-full">
         <div class="pb-4 border-b-2 border-gray-200 flex items-center justify-between">
             <p class="focus:outline-none text-2xl font-bold leading-normal text-gray-800">
                 Files
             </p>
 
-            <button class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-0 inline-flex items-start justify-start px-4 py-2 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded">
-                <p class="text-sm font-medium leading-none text-white flex gap-x-2 items-center">
+            <router-link
+                :to="{ name: 'files.create' }"
+                class="bg-gray-700 text-gray-100 mt-0 inline-flex items-start justify-start px-4 py-2 rounded">
+                <p class="font-medium leading-none flex gap-x-2 items-center">
                     <svg width="24"
                          height="24"
                          fill="none"
@@ -20,49 +22,51 @@
                     </svg>
                     Add File
                 </p>
-            </button>
+            </router-link>
         </div>
 
-        <div class="bg-white py-4">
+        <div class="bg-white py-8">
             <table class="w-full whitespace-nowrap">
                 <thead>
                 <tr class="focus:outline-none h-16 border border-gray-100 rounded">
-                    <td class="px-2 text-base font-medium text-gray-700">Title</td>
-                    <td class="px-2 text-base font-medium text-gray-700">File Name</td>
-                    <td class="px-2 text-base font-medium text-gray-700">File Size</td>
-                    <td class="px-2 text-base font-medium text-gray-700">Timestamp</td>
+                    <td class="px-4 text-base font-medium text-gray-700">Title</td>
+                    <td class="px-4 text-base font-medium text-gray-700">File Name</td>
+                    <td class="px-4 text-base font-medium text-gray-700">File Size</td>
+                    <td class="px-4 text-base font-medium text-gray-700">Timestamp</td>
                     <td></td>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr>
+                <tr v-if="!files || !files.length">
                     <td colspan="5"
                         class="h-64 text-center bg-gray-100 font-mono font-semibold text-gray-700">
                         Storage is void. Add new file to list.
                     </td>
                 </tr>
 
-                <tr class="h-16 border border-gray-100 rounded">
-                    <td class="px-2 text-base leading-none text-gray-700">
-                        Given title for the file
+                <tr :key="file.uuid" v-for="file in files" class="h-16 border border-gray-100 rounded">
+                    <td class="px-4 text-base leading-none text-gray-700">
+                        {{ file.title }}
                     </td>
 
-                    <td class="px-2 text-base leading-none text-gray-700">
-                        Name of the uploaded file
+                    <td class="px-4 text-base leading-none text-gray-700">
+                        {{ file.name }}
                     </td>
 
-                    <td class="px-2 text-base leading-none text-gray-700">
-                        The file size
+                    <td class="px-4 text-base leading-none text-gray-700">
+                        {{ file.size }}
                     </td>
 
-                    <td class="px-2 text-base leading-none text-gray-700">
-                        Uploaded timestamp
+                    <td class="px-4 text-base leading-none text-gray-700">
+                        {{ file.created_at }}
                     </td>
 
-                    <td class="px-2">
+                    <td class="px-4">
                         <div class="flex gap-x-3 justify-end items-center">
-                            <button class="text-sm text-white p-2 bg-gray-500 rounded hover:bg-gray-700 focus:outline-none">
+                            <router-link
+                                :to="{ name: 'files.edit', params: { uuid: file.uuid } }"
+                                class="text-sm text-white p-2 bg-gray-500 rounded hover:bg-gray-700 focus:outline-none">
                                 <svg width="24"
                                      height="24"
                                      fill="none"
@@ -74,9 +78,11 @@
                                     <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4"/>
                                     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"/>
                                 </svg>
-                            </button>
+                            </router-link>
 
-                            <button class="text-sm text-white p-2 bg-red-500 rounded hover:bg-red-700 focus:outline-none">
+                            <button
+                                @click.prevent="deleteFile(file)"
+                                class="text-sm text-white p-2 bg-red-500 rounded hover:bg-red-700 focus:outline-none">
                                 <svg width="24"
                                      height="24"
                                      fill="none"
@@ -97,12 +103,47 @@
                 </tr>
                 </tbody>
             </table>
+
+            <pagination route="files"
+                        @paginate="fetchFiles"
+                        :pagination="pagination"
+                        v-if="files && files.length"></pagination>
         </div>
     </div>
 </template>
 
 <script>
+import Pagination from '../Pagination.vue';
+
 export default {
-    name: 'List'
+    name: 'List',
+    components: {Pagination},
+
+    data() {
+        return {
+            files: [],
+            pagination: {},
+        };
+    },
+
+    created() {
+        this.fetchFiles()
+    },
+
+    methods: {
+        async fetchFiles(url = null) {
+            const {data: {data, ...pagination}} = await window.axios.get(url || '/api/files')
+            this.pagination = pagination
+            this.files = data
+        },
+
+        deleteFile(file) {
+            if (confirm(`Are you sure to delete file with title: ${file.title}?`)) {
+                window.axios
+                    .delete(`/api/files/${file.uuid}`)
+                    .then(() => this.fetchFiles())
+            }
+        },
+    },
 }
 </script>

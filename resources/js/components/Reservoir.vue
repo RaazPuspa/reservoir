@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<style scss>
+<style scoped>
 .router-link-active {
     @apply bg-gray-700 text-gray-100;
 }
