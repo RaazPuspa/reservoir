@@ -15,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'home');
-Route::view('/admin', 'admin');
+Route::name('home.')->group(static function () {
+    Route::view('/', 'home.void')->name('void');
+});
+
+Route::view('/admin/{resources?}', 'admin')
+    ->where(['resources' => '^(files|links|snippets).*$'])
+    ->name('admin');

@@ -1,4 +1,7 @@
 import {createApp} from 'vue';
+import router from './router';
 import Reservoir from './components/Reservoir.vue'
 
-createApp(Reservoir).mount('#reservoir-admin')
+createApp(Reservoir)
+    .use(router)
+    .mount('#reservoir-admin')
