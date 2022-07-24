@@ -1,6 +1,6 @@
 <template>
     <div class="lg:flex">
-        <aside class="w-48 h-full static border-r-2 border-gray-200">
+        <aside class="w-48 static border-r-2 border-gray-200">
             <div class="h-full scrolling-touch">
                 <nav class="pb-20 font-normal text-base">
                     <ul class="list-unstyled fw-normal divide-y divide-gray-200">
@@ -32,7 +32,7 @@
             </div>
         </aside>
 
-        <main class="flex-auto max-h-full overflow-visible">
+        <main class="flex-auto max-h-full overflow-visible" style="height: calc(100vh - 89px)">
             <div class="flex w-full px-4">
                 <router-view/>
             </div>
