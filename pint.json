@@ -1,0 +1,40 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "@PSR2": true,
+        "@PSR12": true,
+        "braces": true,
+        "simplified_null_return": true,
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "blank_line_after_opening_tag": true,
+        "class_definition": {
+            "single_line": false
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "global_namespace_import": {
+            "import_classes": true,
+            "import_constants": true,
+            "import_functions": true
+        },
+        "mb_str_functions": true,
+        "no_unused_imports": true,
+        "ordered_class_elements": true,
+        "ordered_imports": {
+            "sort_algorithm": "alpha",
+            "imports_order": [
+                "class",
+                "function",
+                "const"
+            ]
+        },
+        "declare_strict_types": true,
+        "new_with_braces": {
+            "anonymous_class": false,
+            "named_class": false
+        }
+    }
+}

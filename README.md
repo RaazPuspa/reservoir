@@ -1,64 +1,185 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Reservoir
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Resources management application, as part of an assignment submitted by _Pusparaj Bhattarai_.
 
-## About Laravel
+### Table of Content
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. [Tech Stack](#tech-stack)
+2. [Development Environment](#development-environment)
+    1. [With Docker](#with-docker)
+    2. [Without Docker](#without-docker)
+    3. [Building Assets](#building-assets)
+    4. [Access URL](#access-url)
+3. [Code Standard](#code-standard)
+4. [Static Analysis](#static-analysis)
+5. [CLI Helpers](#cli-helpers)
+    1. [PHPStan](#phpstan)
+    2. [IDE Helpers](#ide-helpers)
+6. [Supporting Links](#supporting-links)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+For the _Reservoir_, we are using the following tech stacks with mentioned version:
 
-## Learning Laravel
+- **PHP** (v8.1)
+- **Laravel** (v9)
+- **Postgres** (v14)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Development Environment
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### With Docker
 
-## Laravel Sponsors
+Docker containers have been prepared for the local development purpose which includes all the required development
+environment dependencies. To start working on the service, you must have [Docker](https://docker.com) installed in your
+local machine.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+[Laravel Sail](https://laravel.com/docs/9.x/sail) is used as command-line interface to interact with default Docker
+development environment. Sail has been installed and configured for the service. When working with fresh clone of the
+service, use the following command to install Sail along with other composer dependencies. Once Sail is installed, you
+can follow the Sail documentation to start your Docker containers for the _Reservoir_.
 
-### Premium Partners
+```shell
+docker run --rm -u "$(id -u):$(id -g)" -v $(pwd):/var/www/html -w /var/www/html raazpuspa/larasail:8.1 composer install
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+To start the server from docker containers, use the Sail command:
 
-## Contributing
+```shell
+./vendor/bin/sail up
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Without Docker
 
-## Code of Conduct
+If you haven't installed Docker within your system, you can manually prepare your machine to run the service and to
+start contributing. Following are the requirements that your system must possess to run _Reservoir_ without Docker
+containers:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **PHP**: v8.1 or latest
+- **Postgres**: v14
+- **Composer**: v2
+- **Yarn**: v1.22 or latest
 
-## Security Vulnerabilities
+Beside mentioned executables, Laravel
+requires [following PHP extensions](https://laravel.com/docs/9.x/deployment#server-requirements):
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- BCMath PHP Extension
+- Ctype PHP Extension
+- DOM PHP Extension
+- Fileinfo PHP Extension
+- JSON PHP Extension
+- Mbstring PHP Extension
+- OpenSSL PHP Extension
+- PCRE PHP Extension
+- PDO PHP Extension (postgres)
+- Tokenizer PHP Extension
+- XML PHP Extension
 
-## License
+_**Note**: [XDebug](https://xdebug.org/) is required to generate test coverage._
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+To start the project server you can either configure Nginx or Apache web servers or can directly use the Laravel serve:
+
+```shell
+php artisan serve [--host=0.0.0.0] [--port=4040]
+```
+
+#### Building assets
+
+_Reservoir_ uses Laravel Vite plugin to compile and build front-end assets. Build process can be done via use of Yarn.
+
+```shell
+yarn install && yarn run build
+```
+
+#### Access URL
+
+Once you start the project, you can access the Swagger API Documentation at following path:
+
+http://localhost:4040
+
+_**Note**: The URL will be as defined in `php artisan serve` or in `.env`._
+
+### Code Standard
+
+We follow the [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard and the
+[PSR-4](https://www.php-fig.org/psr/psr-4/) autoloading standard.
+
+### Static Analysis
+
+Compiled languages need to know about the type of every variable, return type of every method etc. before the program
+runs. This is why the compiler needs to make sure that the program is “correct” and will happily point out to you these
+kinds of mistakes in the source code, like calling an undefined method or passing a wrong number of arguments to a
+function. The compiler acts as a first line of defense before you are able to deploy the application into production.
+
+On the other hand, PHP is nothing like that. If you make a mistake, the program will crash when the line of code with
+the mistake is executed. When testing a PHP application, whether manually or automatically, developers spend a lot of
+their time discovering mistakes that would not even compile in other languages, leaving less time for testing actual
+business logic. [source](https://phpstan.org/blog/find-bugs-in-your-code-without-writing-tests)
+
+To make sure we do not leave any broken code that could have been caught by any compiler in supported language, we have
+configured [PHPStan](https://phpstan.org/). PHPStan focuses on finding errors in your code without actually running it.
+It catches whole classes of bugs even before you write tests for the code. It moves PHP closer to compiled languages in
+the sense that the correctness of each line of the code can be checked before you run the actual line.
+
+On top of the PHPStan, _Reservoir_ uses [Larastan](https://github.com/nunomaduro/larastan) which extends PHPStan to
+support APIs provided by the Laravel framework by adding static typing to Laravel.
+
+### CLI Helpers
+
+During the development phase of _Reservoir_, you need to make sure all of your changes meet defined standards and
+static analysis is not reporting any issues. To see the reporting result within your local development environment,
+following commands might come handy:
+
+#### PHPStan
+
+- Run static analysis
+
+```shell
+./vendor/bin/phpstan
+```
+
+#### Pint
+
+- Run laravel pint
+
+```shell
+./vendor/bin/pint
+```
+
+#### IDE Helpers
+
+- Automatic PHPDoc generation for Laravel Facades
+
+```shell
+php artisan ide-helper:generate
+```
+
+- Automatic PHPDocs for models
+
+```shell
+php artisan ide-helper:models -M
+```
+
+- PhpStorm Meta for Container instances
+
+```shell
+php artisan ide-helper:meta
+```
+
+#### Laravel Sail usage
+
+If your development environment is configured with Laravel Sail, replace `php artisan` with `./vendor/bin/sail artisan`.
+
+### Supporting Links
+
+- [Laravel](https://laravel.com)
+- [Laravel Docs](https://laravel.com/docs/9.x)
+- [Laravel Sail Docs](https://laravel.com/docs/9.x/sail)
+- [Docker](https://docker.com)
+- [PSR-12](https://www.php-fig.org/psr/psr-12/)
+- [PHPStan](https://phpstan.org/)
+- [Laravel Pint](https://github.com/laravel/pint)
+- [Laravel Telescope](https://github.com/laravel/telescope)
+- [Larastan](https://github.com/nunomaduro/larastan)
+- [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper)
+- [Laravel Debugbar](https://github.com/barryvdh/laravel-debugbar)
+- [Laravel Log Viewer](https://github.com/rap2hpoutre/laravel-log-viewer)
