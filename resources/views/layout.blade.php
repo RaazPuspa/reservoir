@@ -115,5 +115,32 @@
 <div class="max-w-[92rem] mx-auto py-2">
     {{ $slot }}
 </div>
+
+<script>
+    function copyToClipboard(snippet) {
+        const snippetCode = snippet.getAttribute('data-code')
+
+        if (navigator.clipboard && window.isSecureContext) {
+            // navigator clipboard api method'
+            return navigator.clipboard.writeText(snippetCode);
+        } else {
+            let textArea = document.createElement("textarea");
+
+            textArea.value = snippetCode;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            return new Promise((res, rej) => {
+                document.execCommand('copy') ? res() : rej();
+                textArea.remove();
+            });
+        }
+    }
+</script>
 </body>
 </html>

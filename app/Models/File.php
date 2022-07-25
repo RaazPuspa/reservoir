@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property string $uuid
@@ -49,6 +50,16 @@ class File extends Model
     {
         return new Attribute(
             get: static fn (string $createdAt) => Carbon::parse($createdAt)->toDayDateTimeString(),
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute<callable, null>
+     */
+    public function downloadUrl(): Attribute
+    {
+        return new Attribute(
+            get: fn () => Storage::disk('public')->url($this->path),
         );
     }
 }

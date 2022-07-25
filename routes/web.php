@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Home\FileController;
+use App\Http\Controllers\Home\LinkController;
+use App\Http\Controllers\Home\SnippetController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('home.')->group(static function () {
     Route::view('/', 'home.void')->name('void');
+    Route::resource('files', FileController::class)->only(['index']);
+    Route::resource('links', LinkController::class)->only(['index']);
+    Route::resource('snippets', SnippetController::class)->only(['index']);
 });
 
 Route::view('/admin/{resources?}', 'admin')
