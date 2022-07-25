@@ -26,7 +26,7 @@
         </div>
 
         <div class="bg-white py-8">
-            <table class="w-full whitespace-nowrap">
+            <table class="w-full">
                 <thead>
                 <tr class="focus:outline-none h-16 border border-gray-100 rounded">
                     <td class="px-4 text-base font-medium text-gray-700">Title</td>
@@ -80,24 +80,32 @@
                                 </svg>
                             </router-link>
 
-                            <button
-                                @click.prevent="deleteLink(link)"
-                                class="text-sm text-white p-2 bg-red-500 rounded hover:bg-red-700 focus:outline-none">
-                                <svg width="24"
-                                     height="24"
-                                     fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke-width="1.25"
-                                     stroke="currentColor"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <line x1="4" y1="7" x2="20" y2="7"/>
-                                    <line x1="10" y1="11" x2="10" y2="17"/>
-                                    <line x1="14" y1="11" x2="14" y2="17"/>
-                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
-                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
-                                </svg>
-                            </button>
+                            <confirm @confirmed="deleteLink(link)">
+                                <template #trigger>
+                                    <button class="text-sm text-white p-2 bg-red-500 rounded hover:bg-red-700 focus:outline-none">
+                                        <svg width="24"
+                                             height="24"
+                                             fill="none"
+                                             viewBox="0 0 24 24"
+                                             stroke-width="1.25"
+                                             stroke="currentColor"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <line x1="4" y1="7" x2="20" y2="7"/>
+                                            <line x1="10" y1="11" x2="10" y2="17"/>
+                                            <line x1="14" y1="11" x2="14" y2="17"/>
+                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                        </svg>
+                                    </button>
+                                </template>
+
+                                <template #default>
+                                    <div class="text-lg text-gray-900 whitespace-wrap">
+                                        {{ `Are you sure to delete link with title: ${link.title}?` }}
+                                    </div>
+                                </template>
+                            </confirm>
                         </div>
                     </td>
                 </tr>
@@ -113,11 +121,12 @@
 </template>
 
 <script>
+import Confirm from '../Confirm.vue';
 import Pagination from '../Pagination.vue';
 
 export default {
     name: 'List',
-    components: {Pagination},
+    components: {Confirm, Pagination},
 
     data() {
         return {
@@ -138,11 +147,9 @@ export default {
         },
 
         deleteLink(link) {
-            if (confirm(`Are you sure to delete link with title: ${link.title}?`)) {
-                window.axios
-                    .delete(`/api/links/${link.uuid}`)
-                    .then(() => this.fetchLinks())
-            }
+            window.axios
+                .delete(`/api/links/${link.uuid}`)
+                .then(() => this.fetchLinks())
         },
     },
 }

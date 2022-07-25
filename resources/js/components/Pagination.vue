@@ -4,8 +4,8 @@
             Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} results
         </div>
 
-        <ul class="flex items-center border border-gray-100 rounded-md divide-x divide-gray-100">
-            <li v-if="requiresFirst" class="px-4 py-2 text-gray-700">
+        <ul class="flex items-center border border-gray-100 rounded-md divide-x divide-gray-100 text-gray-700">
+            <li v-if="requiresFirst" class="px-4 py-2">
                 <router-link
                     :to="{ name: route, 'query': { page: 1 }}"
                     @click.prevent="$emit('paginate', `${pagination.path}?page=1`)">
@@ -13,7 +13,7 @@
                 </router-link>
             </li>
 
-            <li class="px-4 py-2 text-gray-700">
+            <li class="px-4 py-2">
                 <router-link
                     v-if="pagination.current_page > 1"
                     :to="{ name: route, 'query': { page: pagination.current_page - 1 }}"
@@ -26,7 +26,7 @@
 
             <li
                 v-for="page in pages"
-                class="px-4 py-2 text-gray-700"
+                class="px-4 py-2"
                 :class="{'bg-gray-700 text-gray-100 font-semibold rounded': page === pagination.current_page}">
                 <router-link
                     :to="{ name: route, 'query': { page: page }}"
@@ -35,7 +35,7 @@
                 </router-link>
             </li>
 
-            <li class="px-4 py-2 text-gray-700">
+            <li class="px-4 py-2">
                 <router-link
                     v-if="pagination.current_page < pagination.last_page"
                     :to="{ name: route, 'query': { page: pagination.current_page + 1 }}"
@@ -46,7 +46,7 @@
                 <a v-else href="javascript:" class="text-gray-400 cursor-not-allowed">Next</a>
             </li>
 
-            <li v-if="requiresLast" class="px-4 py-2 text-gray-700">
+            <li v-if="requiresLast" class="px-4 py-2">
                 <router-link
                     :to="{ name: route, 'query': { page: pagination.last_page }}"
                     @click.prevent="$emit('paginate', `${pagination.path}?page=${pagination.last_page}`)">
