@@ -15,9 +15,11 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\LinkController;
+use App\Http\Controllers\Admin\SnippetController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('files/{file}', [FileController::class, 'update'])->name('files.update');
 Route::apiResource('files', FileController::class)->except(['update']);
 
 Route::apiResource('links', LinkController::class);
+Route::apiResource('snippets', SnippetController::class);
